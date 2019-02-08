@@ -12,9 +12,11 @@ def convert_json_to_ros_message(message_type, json_message):
         ros_message = convert_json_to_ros_message(message_type, json_message)
     """
     dictionary = json.loads(json_message)
+    if dictionary.has_key("topic"):
+        del dictionary["topic"]
     return message_converter.convert_dictionary_to_ros_message(message_type, dictionary)
 
-def convert_ros_message_to_json(message):
+def convert_ros_message_to_json(message, topic_name=""):
     """
     Takes in a ROS message and returns a JSON-formatted string.
 
@@ -23,5 +25,7 @@ def convert_ros_message_to_json(message):
         json_message = convert_ros_message_to_json(ros_message)
     """
     dictionary = message_converter.convert_ros_message_to_dictionary(message)
+    if topic_name:
+        dictionary["topic"]=topic_name
     json_message = json.dumps(dictionary)
     return json_message

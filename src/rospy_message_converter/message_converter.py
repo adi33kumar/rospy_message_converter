@@ -77,8 +77,16 @@ def convert_dictionary_to_ros_message(message_type, dictionary, kind='message'):
         ros_message = convert_dictionary_to_ros_message(message_type, dict_message, kind)
     """
     if kind == 'message':
-        message_class = roslib.message.get_message_class(message_type)
-        message = message_class()
+        """
+        In the case of message, if finding the specified message type in roslib
+        fails, try considering the message_type as a message_class itself, i.e.,
+        message=message_type()
+        """
+        try:
+            message_class = roslib.message.get_message_class(message_type)
+            message = message_class()
+        except:
+            message=message_type()
     elif kind == 'request':
         service_class = roslib.message.get_service_class(message_type)
         message = service_class._request_class()

@@ -88,11 +88,17 @@ def convert_dictionary_to_ros_message(message_type, dictionary, kind='message'):
         except:
             message=message_type()
     elif kind == 'request':
-        service_class = roslib.message.get_service_class(message_type)
-        message = service_class._request_class()
+        try:
+            service_class = roslib.message.get_service_class(message_type)
+            message = service_class._request_class()
+        except:
+            message=message_type()
     elif kind == 'response':
-        service_class = roslib.message.get_service_class(message_type)
-        message = service_class._response_class()
+        try:
+            service_class = roslib.message.get_service_class(message_type)
+            message = service_class._response_class()
+        except:
+            message=message_type()
     else:
         raise ValueError('Unknown kind "%s".' % kind)
     message_fields = dict(_get_message_fields(message))
